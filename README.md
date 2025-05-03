@@ -4,7 +4,7 @@
 [Aula 1 - Configuração do Gulp](#aula-1--configuração-do-gulp)  
 [Aula 2 - Crie Tarefas ](#aula-2--crie-tarefas)  
 [Aula 3 - Execute tarefas em série ](#aula-3--execute-tarefas-em-série)  
-[Aula 4 - ](#aula-)  
+[Aula 4 - Execute tarefas em paralelo ](#aula-4--execute-tarefas-em-paralelo)  
 [Aula 5 - ](#aula-)  
 [Aula 6 - ](#aula-)  
 
@@ -279,3 +279,71 @@ Nos momentos finais da aula, o professor apenas mostrou a execução no terminal
 ---
 
 Com isso, finalizamos a terceira aula do módulo, consolidando o uso do `gulp.series()` para automatizar tarefas sequenciais de forma controlada.
+
+## Aula 4 – Execute Tarefas em Paralelo
+
+Nesta quarta aula do módulo sobre Gulp, aprendemos como executar tarefas em **paralelo**, ou seja, ao mesmo tempo. Essa abordagem ajuda a reduzir o tempo total de execução quando as tarefas não dependem umas das outras.
+
+### Objetivos da aula
+
+- Executar tarefas em paralelo utilizando o Gulp;
+- Compreender quando essa abordagem é vantajosa em relação às tarefas em série.
+
+### Estrutura básica para execução paralela
+
+Assim como nas aulas anteriores, o primeiro passo é importar o pacote do Gulp no topo do arquivo:
+
+```js
+const gulp = require('gulp');
+```
+
+> Observação: o nome da constante pode ser qualquer um (como `gulpJS`, `pacote`, etc.), mas o mais comum é usar `gulp`.
+
+A diferença está no método utilizado para definir as tarefas. Em vez de `gulp.series()`, usamos:
+
+```js
+exports.default = gulp.parallel(funcaoPadrao, tarefa18);
+```
+
+As funções passadas dentro do `gulp.parallel()` serão executadas **simultaneamente**.
+
+### Diferença perceptível na execução
+
+Ao executar `gulp.series()`, o terminal mostra:
+- Início da tarefa `default`;
+- Execução completa da `funcaoPadrao`;
+- Execução da `tarefa18`;
+- Finalização da `default`.
+
+Já com `gulp.parallel()`, o Gulp:
+- Inicia `default`;
+- Executa `funcaoPadrao` e `tarefa18` ao mesmo tempo;
+- Finaliza `default` somente após ambas terminarem.
+
+### Demonstração com `setTimeout`
+
+Para evidenciar a diferença, o professor usou `setTimeout`:
+
+- `funcaoPadrao` com 2 segundos de espera;
+- `tarefa18` com 1 segundo de espera.
+
+#### Em série (`gulp.series()`):
+Tempo total de execução: **3 segundos** (2s + 1s).
+
+#### Em paralelo (`gulp.parallel()`):
+Tempo total de execução: **2 segundos** (a função mais lenta).
+
+Essa demonstração torna visível a economia de tempo ao usar tarefas em paralelo quando possível.
+
+### Quando não usar tarefas em paralelo
+
+Apesar das vantagens, o professor destaca que **nem todas as tarefas podem ser executadas simultaneamente**. Há casos em que uma tarefa depende da outra. Por exemplo:
+
+- Compilar um arquivo Sass primeiro;
+- Só depois renomeá-lo ou movê-lo.
+
+Se essas tarefas forem paralelizadas, a segunda pode tentar agir sobre um arquivo que ainda nem foi gerado, gerando erros no processo.
+
+---
+
+Com isso, finalizamos a quarta aula, compreendendo o uso correto e estratégico do `gulp.parallel()` para otimizar o tempo de execução das tarefas sem comprometer a lógica do fluxo.
