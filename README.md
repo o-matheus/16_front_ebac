@@ -3,7 +3,7 @@
 ## Menu
 [Aula 1 - Configuração do Gulp](#aula-1--configuração-do-gulp)  
 [Aula 2 - Crie Tarefas ](#aula-2--crie-tarefas)  
-[Aula 3 - ](#aula-)  
+[Aula 3 - Execute tarefas em série ](#aula-3--execute-tarefas-em-série)  
 [Aula 4 - ](#aula-)  
 [Aula 5 - ](#aula-)  
 [Aula 6 - ](#aula-)  
@@ -227,3 +227,55 @@ Aqui, `dizTchau` é uma função privada que só pode ser executada por meio da 
 ### Conclusão da Aula 2
 
 Com isso, finalizamos a segunda aula, onde aprendemos a criar e executar tarefas no Gulp, modularizar o código com JavaScript, entender a diferença entre tarefas públicas e privadas, e estruturar corretamente nossas automações com `callback`.
+
+## Aula 3 – Execute Tarefas em Série
+
+Nesta terceira aula do módulo sobre Gulp, aprendemos como executar tarefas em **série**, ou seja, garantindo que uma tarefa só comece após a anterior ser concluída.
+
+### Objetivos da aula
+
+- Compreender o conceito e a importância da execução de tarefas em série no Gulp;
+- Configurar e executar tarefas em série utilizando o método `gulp.series()`.
+
+### Tarefas em série vs. tarefas em paralelo
+
+As tarefas do Gulp podem ser classificadas em dois tipos:
+
+- **Tarefas executadas em série**: seguem uma ordem específica, uma após a outra;
+- **Tarefas executadas em paralelo**: são executadas simultaneamente.
+
+Nesta aula, focamos na **execução em série**.
+
+### Importação do pacote Gulp
+
+O primeiro passo foi importar o pacote do Gulp que já havia sido instalado no repositório local. Para isso, usamos o `require`:
+
+```js
+const gulp = require('gulp');
+```
+
+> Observação: o nome da constante pode ser qualquer um (ex: `gulpJS`, `pacoteGulp`, etc.), mas é comum usar `gulp` para manter clareza e padronização.
+
+### Usando o gulp.series()
+
+Em seguida, substituímos a exportação padrão por uma chamada à função `gulp.series()`, que recebe como argumentos as funções que devem ser executadas em sequência:
+
+```js
+exports.default = gulp.series(funcaoPadrao, dizOi);
+```
+
+Com isso, ao executar `npm run gulp`, o Gulp irá:
+1. Executar `funcaoPadrao`;
+2. Em seguida, executar `dizOi`.
+
+A execução respeita **exatamente a ordem** definida dentro dos parênteses do `gulp.series()`.
+
+### Considerações finais
+
+Quando usamos `gulp.series()`, garantimos que cada tarefa só será iniciada **depois que a anterior terminar**. Isso é útil quando a ordem das ações importa para o fluxo da aplicação.
+
+Nos momentos finais da aula, o professor apenas mostrou a execução no terminal, destacando que os `console.log` confirmam o funcionamento em série conforme o esperado.
+
+---
+
+Com isso, finalizamos a terceira aula do módulo, consolidando o uso do `gulp.series()` para automatizar tarefas sequenciais de forma controlada.
