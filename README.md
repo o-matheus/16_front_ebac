@@ -5,7 +5,7 @@
 [Aula 2 - Crie Tarefas ](#aula-2--crie-tarefas)  
 [Aula 3 - Execute tarefas em série ](#aula-3--execute-tarefas-em-série)  
 [Aula 4 - Execute tarefas em paralelo ](#aula-4--execute-tarefas-em-paralelo)  
-[Aula 5 - ](#aula-)  
+[Aula 5 - Use o gulp para compilar SASS ](#aula-5--use-gulp-para-compilar-sass)  
 [Aula 6 - ](#aula-)  
 
 
@@ -347,3 +347,106 @@ Se essas tarefas forem paralelizadas, a segunda pode tentar agir sobre um arquiv
 ---
 
 Com isso, finalizamos a quarta aula, compreendendo o uso correto e estratégico do `gulp.parallel()` para otimizar o tempo de execução das tarefas sem comprometer a lógica do fluxo.
+
+## Aula 5 – Use Gulp para compilar SASS
+
+Nesta aula, aprendemos como automatizar a tarefa de compilar arquivos Sass para CSS utilizando o Gulp, além de configurar compressão, mapeamento de origem e observação de alterações em tempo real.
+
+### Objetivos da aula
+
+1. Compreender o propósito da automação de tarefas com o Gulp no desenvolvimento front-end;
+2. Instalar e configurar os plugins necessários para compilar arquivos Sass e realizar outras tarefas comuns como compressão;
+3. Criar tarefas personalizadas no Gulp para automatizar o processo de desenvolvimento.
+
+---
+
+### 1. Instalação dos plugins necessários
+
+Primeiramente, instalamos dois pacotes essenciais:
+
+```bash
+npm install --save-dev gulp-sass
+npm install --save-dev sass
+```
+
+A instalação de `gulp-sass` permite que o Gulp interaja com arquivos `.scss`, enquanto o pacote `sass` serve como motor de compilação.
+
+A importação desses pacotes é feita da seguinte forma:
+
+```js
+const sass = require('gulp-sass')(require('sass'));
+```
+
+Essa estrutura permite passar o motor `sass` como parâmetro do `gulp-sass`, garantindo a compatibilidade.
+
+---
+
+### 2. Criando a função `compilaSass`
+
+A função responsável por compilar os arquivos Sass é criada da seguinte forma:
+
+```js
+function compilaSass() {
+  return gulp
+    .src('./src/styles/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({ style: 'compressed' }))
+    .pipe(sourcemaps.write('./maps'))
+    .pipe(gulp.dest('./build/styles'));
+}
+```
+
+**Explicação:**
+
+* `.src(...)`: Define os arquivos Sass a serem compilados.
+* `.pipe(sourcemaps.init())`: Inicia o mapeamento de origem para o DevTools.
+* `.pipe(sass({ style: 'compressed' }))`: Compila e minifica o Sass.
+* `.pipe(sourcemaps.write('./maps'))`: Gera os arquivos `.map` na pasta indicada.
+* `.pipe(gulp.dest(...))`: Salva o CSS compilado.
+
+**Importações necessárias:**
+
+```js
+const gulp = require('gulp');
+const sourcemaps = require('gulp-sourcemaps');
+```
+
+Essa estrutura garante que o navegador consiga mapear os estilos aplicados ao código Sass original ao inspecionar o site pelo DevTools.
+
+---
+
+### 3. Criando a tarefa `watch`
+
+Para não precisarmos executar manualmente o `npm run gulp sass` a cada alteração, criamos uma tarefa de observação:
+
+```js
+exports.watch = function () {
+  gulp.watch(
+    './src/styles/*.scss',
+    { ignoreInitial: false },
+    gulp.series(compilaSass)
+  );
+};
+```
+
+**Detalhes:**
+
+* O primeiro parâmetro define os arquivos a serem observados.
+* `{ ignoreInitial: false }` garante que o `compilaSass` será executado assim que o `watch` for iniciado.
+* `gulp.series(compilaSass)` define que a função será executada em sequência sempre que houver uma alteração.
+
+Com isso, basta executar:
+
+```bash
+npm run gulp watch
+```
+
+E o Gulp cuidará de compilar automaticamente o CSS toda vez que um `.scss` for alterado.
+
+Para interromper a execução do `watch`, basta pressionar `Ctrl + C` no terminal.
+
+---
+
+### Conclusão
+
+Com essa aula, encerramos a primeira tarefa prática realmente útil com Gulp: transformar arquivos Sass em CSS de forma automatizada, minificada e com mapeamento de origem. Também aprendemos a monitorar alterações em tempo real com o `watch`, otimizando o fluxo de trabalho no front-end.
