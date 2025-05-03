@@ -2,7 +2,7 @@
 
 ## Menu
 [Aula 1 - Configuração do Gulp](#aula-1--configuração-do-gulp)  
-[Aula 2 - ](#aula-)  
+[Aula 2 - Crie Tarefas ](#aula-2--crie-tarefas)  
 [Aula 3 - ](#aula-)  
 [Aula 4 - ](#aula-)  
 [Aula 5 - ](#aula-)  
@@ -114,3 +114,116 @@ Por fim, criamos o arquivo `README.md`, onde posteriormente será adicionado est
 ### 13. Conclusão
 
 Com a sincronização finalizada no GitHub, encerramos a primeira aula do módulo sobre automação de tarefas com Gulp.
+
+## Aula 2 – Crie Tarefas
+
+Nesta aula, aprendemos como criar tarefas no Gulp e compreender melhor o funcionamento da automação de processos. A seguir, estão os principais pontos abordados:
+
+### 1. Objetivos da aula
+
+- Compreender o conceito de automação de tarefas;
+- Criar tarefas no Gulp utilizando funções;
+- Entender como essas tarefas podem ser executadas automaticamente;
+- Distinguir entre tarefas públicas e privadas no Gulp.
+
+### 2. Introdução ao ES Modules
+
+Antes de iniciar com o Gulp, foi apresentada a tecnologia **ES Modules**, uma forma de modularizar arquivos JavaScript. Com ela, é possível escrever múltiplos arquivos JS e importar funções entre eles.
+
+Exemplo:
+- Criamos o arquivo `sum.js` contendo a função `somar(a, b)`.
+- Usamos `console.log(somar(10, 10))` para testar.
+- Executamos o script com `node sum.js`.
+
+### 3. Exportação e importação com CommonJS
+
+Para importar a função `somar` em outro arquivo (`arithmetic.js`):
+
+- Exportamos no `sum.js`:
+
+```js
+module.exports = somar;
+```
+
+- Importamos no `arithmetic.js`:
+
+```js
+const somar = require('./sum.js');
+console.log('Resultado:', somar(10, 20));
+```
+
+> Observação: o uso de `./` indica que o arquivo está no mesmo diretório.
+
+### 4. Primeira tarefa no Gulp
+
+Iniciamos o `gulpfile.js` com uma função padrão:
+
+```js
+function funcaoPadrao(callback) {
+  console.log('Executando via Gulp');
+  callback();
+}
+
+exports.default = funcaoPadrao;
+```
+
+Executamos com:
+
+```bash
+npm run gulp
+```
+
+#### Erros comuns
+
+O Gulp exige que a tarefa sinalize quando termina. O erro "A tarefa 'default' não foi concluída" ocorre quando não usamos o `callback` corretamente.
+
+> O parâmetro `callback` pode ser abreviado para `cb`, como em `function funcaoPadrao(cb)`. O funcionamento é o mesmo, apenas mais conciso.
+
+### 5. Criando múltiplas tarefas
+
+Criamos outra função chamada `dizOi`:
+
+```js
+function dizOi(callback) {
+  console.log('Olá Gulp!');
+  callback();
+}
+
+exports.dizOi = dizOi;
+```
+
+- Para executar:
+
+```bash
+npm run gulp dizOi
+```
+
+> O nome da tarefa no terminal deve corresponder ao nome definido na exportação (`exports.nome = função`).
+
+### 6. Tarefas públicas vs. tarefas privadas
+
+- **Tarefa pública**: tem `callback` e é exportada. Pode ser chamada no terminal.
+- **Tarefa privada**: não tem `callback` e não é exportada. Só pode ser usada dentro de outra tarefa.
+
+Exemplo:
+
+```js
+function dizTchau() {
+  console.log('Tchau!');
+}
+
+function dizOi(callback) {
+  dizTchau();
+  callback();
+}
+
+exports.dizOi = dizOi;
+```
+
+Aqui, `dizTchau` é uma função privada que só pode ser executada por meio da função `dizOi`.
+
+> Observação: o `callback` continua sendo obrigatório apenas para as tarefas públicas.
+
+### Conclusão da Aula 2
+
+Com isso, finalizamos a segunda aula, onde aprendemos a criar e executar tarefas no Gulp, modularizar o código com JavaScript, entender a diferença entre tarefas públicas e privadas, e estruturar corretamente nossas automações com `callback`.
