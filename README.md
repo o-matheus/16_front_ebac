@@ -450,3 +450,103 @@ Para interromper a execução do `watch`, basta pressionar `Ctrl + C` no termina
 ### Conclusão
 
 Com essa aula, encerramos a primeira tarefa prática realmente útil com Gulp: transformar arquivos Sass em CSS de forma automatizada, minificada e com mapeamento de origem. Também aprendemos a monitorar alterações em tempo real com o `watch`, otimizando o fluxo de trabalho no front-end.
+
+Com certeza! Utilizando o conteúdo da aula 6 sobre minificação e otimização com Gulp como base, e seguindo o padrão da aula 5 sobre compilação de Sass, podemos estruturar um resumo conciso e informativo.
+
+## Aula 6 – Otimização de Assets com Gulp: Minificação de JavaScript e Compressão de Imagens
+
+Nesta aula, exploramos técnicas para otimizar o desempenho de aplicações web através do Gulp, focando na minificação e obfuscação de JavaScript, além da compressão de imagens.
+
+### Objetivos da aula
+
+- Aprender a minificar arquivos JavaScript para reduzir seu tamanho e melhorar o tempo de carregamento.
+- Compreender como obfuscar código JavaScript para dificultar sua leitura e análise.
+- Configurar a compressão de imagens para diminuir o tamanho dos arquivos sem perda significativa de qualidade.
+- Automatizar essas tarefas utilizando o Gulp para um fluxo de trabalho eficiente.
+
+### 1. Minificação e Obfuscação de JavaScript
+
+O processo de otimização de JavaScript começou com a instalação dos plugins necessários:
+```bash
+npm install --save-dev gulp-uglify
+npm install --save-dev gulp-obfuscate
+```
+A importação desses plugins no `gulpfile.js` foi realizada da seguinte forma:
+```javascript
+const uglify = require('gulp-uglify');
+const obfuscate = require('gulp-obfuscate');
+```
+A função `comprimeJavaScript` foi criada para realizar a minificação e a obfuscação:
+```javascript
+function comprimeJavaScript() {
+  return gulp.src('./source/scripts/*.js')
+    .pipe(uglify())
+    .pipe(obfuscate())
+    .pipe(gulp.dest('./build/scripts'));
+}
+```
+**Explicação:**
+
+- `.src('./source/scripts/*.js')`: Define os arquivos JavaScript na pasta `source/scripts` a serem processados.
+- `.pipe(uglify())`: Aplica a minificação ao código JavaScript, removendo espaços em branco e comentários.
+- `.pipe(obfuscate())`: Realiza a obfuscação do código, tornando-o mais difícil de ler e entender.
+- `.pipe(gulp.dest('./build/scripts'))`: Define a pasta de destino (`./build/scripts`) para os arquivos JavaScript otimizados.
+
+A tarefa foi exportada para uso no terminal:
+```javascript
+exports.comprimeJavaScript = comprimeJavaScript;
+```
+
+### 2. Compressão de Imagens
+
+A otimização de imagens foi abordada com a instalação do plugin `gulp-imagemin`. Devido a problemas de compatibilidade com versões recentes do Gulp e do plugin, foi necessário realizar um downgrade do Gulp para que a tarefa funcionasse corretamente.
+```bash
+npm install --save-dev gulp-imagemin@versao_compativel
+```
+A função `comprimeImagens` foi estruturada para otimizar as imagens:
+```javascript
+function comprimeImagens() {
+  return gulp.src('./source/imagens/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest('./build/imagens'));
+}
+```
+**Explicação:**
+
+- `.src('./source/imagens/*')`: Seleciona todos os arquivos dentro da pasta `source/imagens`.
+- `.pipe(imagemin())`: Aplica a compressão nas imagens, reduzindo seu tamanho.
+- `.pipe(gulp.dest('./build/imagens'))`: Define a pasta de destino (`./build/imagens`) para as imagens otimizadas.
+
+A tarefa também foi exportada:
+```javascript
+exports.comprimeImagens = comprimeImagens;
+```
+
+### 3. Tarefa `default` e Automação com `watch`
+
+Para automatizar o processo de otimização e monitorar alterações nos arquivos, foi criada uma tarefa `default` que utiliza o `gulp.watch`:
+```javascript
+exports.default = function() {
+  gulp.watch('./source/styles/*.scss', compilaSass);
+  gulp.watch('./source/scripts/*.js', comprimeJavaScript);
+  gulp.watch('./source/imagens/*', comprimeImagens);
+};
+```
+**Detalhes:**
+
+- `gulp.watch('./source/styles/*.scss', compilaSass)`: Monitora as alterações nos arquivos `.scss` e executa a tarefa `compilaSass` (da aula anterior) quando houver modificações.
+- `gulp.watch('./source/scripts/*.js', comprimeJavaScript)`: Monitora as alterações nos arquivos `.js` e executa a tarefa `comprimeJavaScript`.
+- `gulp.watch('./source/imagens/*', comprimeImagens)`: Monitora as alterações nas imagens e executa a tarefa `comprimeImagens`.
+
+Para iniciar a observação e a automação, executa-se no terminal:
+```bash
+npm run gulp
+```
+
+### Boas Práticas com Git
+
+Foi recomendado adicionar a pasta `build/` ao arquivo `.gitignore` para evitar o versionamento dos arquivos gerados automaticamente.
+
+### Conclusão
+
+Esta aula demonstrou como utilizar o Gulp para otimizar assets de aplicações web, incluindo a minificação e obfuscação de JavaScript e a compressão de imagens. A automação dessas tarefas com o `gulp.watch` melhora significativamente o fluxo de trabalho no desenvolvimento front-end, garantindo aplicações mais performáticas.
