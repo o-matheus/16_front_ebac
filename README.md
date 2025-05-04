@@ -1,6 +1,3 @@
-Perfeito! Aqui está a versão em **Markdown**, com os títulos organizados em hierarquia conforme solicitado:
-
-````md
 ## Atividade EBAC – Automação com Gulp
 
 ### 1. Objetivo da Atividade
